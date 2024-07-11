@@ -48,7 +48,7 @@ export CPPFLOW_LIBRARIES=/address/to/the/library/cppflow
 
 ### Installation of the Python side
 
-Install **Tensorforce** and **mpi4py**. Look at the 
+Install **Tensorforce** and **mpi4py**.
 
 
 
