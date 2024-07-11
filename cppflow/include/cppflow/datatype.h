@@ -1,7 +1,7 @@
 //
 // Created by serizba on 12/7/20.
 //
-// Small edit by Saeed Salehi to handle boolean inputs
+// Edited by Saeed Salehi to handle boolean inputs
 
 #ifndef CPPFLOW2_DATATYPE_H
 #define CPPFLOW2_DATATYPE_H
