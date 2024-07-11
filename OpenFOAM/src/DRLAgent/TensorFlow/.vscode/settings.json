@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "errorManip.H": "cpp",
+        "Pstream.H": "cpp",
+        "Ostream.H": "cpp",
+        "agentjetfvpatchvectorfield.h": "c",
+        "agentJetFvPatchVectorField.H": "cpp",
+        "addtoruntimeselectiontable.h": "c",
+        "probes.h": "c",
+        "volfields.h": "c",
+        "volFields.H": "cpp",
+        "probes.H": "cpp",
+        "agentJetFvPatchVectorField.C": "cpp"
+    }
+}
