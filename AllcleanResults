@@ -1,0 +1,7 @@
+#!/bin/sh
+
+rm results/training/* -rf
+rm cylinder/run*/ -rf
+rm summaries/ -rf
+rm model*/ -rf
+rm episodes-*/ -rf

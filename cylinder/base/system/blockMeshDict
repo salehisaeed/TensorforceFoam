@@ -1,0 +1,234 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2112                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+scale        1.0;
+meshDensity  1.0;//2.25; // Level of mesh density (a higher value gives a denser mesh)
+
+rInner       0.5; // Cylinder radius
+rOuter       #eval{ 2.5*$rInner };
+xOutlet      #eval{ 50*$rInner };
+xInlet       #eval{ -10*$rInner };
+yMax         #eval{ 18*$rInner };
+rInnerSinPi4 #eval{ $rInner*sin(0.25*pi()) };
+rOuterSinPi4 #eval{ $rOuter*sin(0.25*pi()) };
+
+thetaJet     10.0; //degrees
+xJetInner    #eval{ $rInner*sin(degToRad($thetaJet/2.0)) };
+yJetInner    #eval{ $rInner*cos(degToRad($thetaJet/2.0)) };
+xJetOuter    #eval{ $rOuter*sin(degToRad($thetaJet/2.0)) };
+yJetOuter    #eval{ $rOuter*cos(degToRad($thetaJet/2.0)) };
+
+zmin         -0.5;
+zmax         0.5;
+
+nRadial      #eval #{ round(23 * $meshDensity) #};
+nTheta1      #eval #{ round(7  * $meshDensity) #};
+nTheta2      #eval #{ round(11 * $meshDensity) #};
+nJet         #eval #{ round(6  * $meshDensity) #};
+nxoutlet     #eval #{ round(52 * $meshDensity) #};
+nxinlet      #eval #{ round(14 * $meshDensity) #};
+ny           #eval #{ round(23 * $meshDensity) #};
+nz           1;
+
+vertices #codeStream
+{
+    codeInclude
+    #{
+        #include "pointField.H"
+    #};
+
+    code
+    #{
+        pointField points(22);
+        points[0]  = point($rInner, 0, $zmin);
+        points[1]  = point($rOuter, 0, $zmin);
+        points[2]  = point($rInnerSinPi4, $rInnerSinPi4, $zmin);
+        points[3]  = point($rOuterSinPi4, $rOuterSinPi4, $zmin);
+        points[4]  = point($xJetInner, $yJetInner, $zmin);
+        points[5]  = point($xJetOuter, $yJetOuter, $zmin);
+        points[6]  = point(-$xJetInner, $yJetInner, $zmin);
+        points[7]  = point(-$xJetOuter, $yJetOuter, $zmin);
+        points[8]  = point(-$rInnerSinPi4, $rInnerSinPi4, $zmin);
+        points[9]  = point(-$rOuterSinPi4, $rOuterSinPi4, $zmin);
+        points[10] = point(-$rInner, 0, $zmin);
+        points[11] = point(-$rOuter, 0, $zmin);
+        points[12] = point($xOutlet, 0, $zmin);
+        points[13] = point($xOutlet, $rOuterSinPi4, $zmin);
+        points[14] = point($xOutlet, $yMax, $zmin);
+        points[15] = point($rOuterSinPi4, $yMax, $zmin);
+        points[16] = point($xJetOuter, $yMax, $zmin);
+        points[17] = point(-$xJetOuter, $yMax, $zmin);
+        points[18] = point(-$rOuterSinPi4, $yMax, $zmin);
+        points[19] = point($xInlet, $yMax, $zmin);
+        points[20] = point($xInlet, $rOuterSinPi4, $zmin);
+        points[21] = point($xInlet, 0, $zmin);
+     
+        // Mirror -z points to +z side
+        label sz = points.size();
+        points.setSize(2*sz);
+        for (label i = 0; i < sz; ++i)
+        {
+            const point& pt = points[i];
+            points[i + sz] = point(pt.x(), pt.y(), $zmax);
+        }
+
+        os  << points;
+    #};
+};
+
+
+blocks
+(
+    hex ( 0 1 3 2 22 23 25 24 ) ($nRadial $nTheta1 $nz) simpleGrading (18 1 1)
+    hex ( 2 3 5 4 24 25 27 26 ) ($nRadial $nTheta2 $nz) simpleGrading (18 0.25 1)
+    hex ( 4 5 7 6 26 27 29 28 ) ($nRadial $nJet $nz) simpleGrading (18 1 1)
+    hex ( 6 7 9 8 28 29 31 30 ) ($nRadial $nTheta2 $nz) simpleGrading (18 4 1)
+    hex ( 8 9 11 10 30 31 33 32 ) ($nRadial $nTheta1 $nz) simpleGrading (18 1 1)
+    hex ( 1 12 13 3 23 34 35 25 ) ($nxoutlet $nTheta1 $nz) simpleGrading (12 1 1)
+    hex ( 3 13 14 15 25 35 36 37 ) ($nxoutlet $ny $nz) simpleGrading (12 8 1)
+    hex ( 5 3 15 16 27 25 37 38 ) ($nTheta2 $ny $nz) simpleGrading (4 8 1)
+    hex ( 7 5 16 17 29 27 38 39 ) ($nJet $ny $nz) simpleGrading (1 8 1)
+    hex ( 9 7 17 18 31 29 39 40 ) ($nTheta2 $ny $nz) simpleGrading (0.25 8 1)
+    hex ( 20 9 18 19 42 31 40 41 ) ($nxinlet $ny $nz) simpleGrading (0.2 8 1)
+    hex ( 21 11 9 20 43 33 31 42 ) ($nxinlet $nTheta1 $nz) simpleGrading (0.2 1 1)
+
+);
+
+edges
+(
+    // Inner cylinder
+    arc  0  2 origin (0 0 $zmin)
+    arc  2  4 origin (0 0 $zmin)
+    arc  4  6 origin (0 0 $zmin)
+    arc  6  8 origin (0 0 $zmin)
+    arc  8 10 origin (0 0 $zmin)
+    
+    arc 22 24 origin (0 0 $zmax)
+    arc 24 26 origin (0 0 $zmax)
+    arc 26 28 origin (0 0 $zmax)
+    arc 28 30 origin (0 0 $zmax)
+    arc 30 32 origin (0 0 $zmax)
+
+    // // Outer cylinder
+    arc  1  3 origin (0 0 $zmin)
+    arc  3  5 origin (0 0 $zmin)
+    arc  5  7 origin (0 0 $zmin)
+    arc  7  9 origin (0 0 $zmin)
+    arc  9 11 origin (0 0 $zmin)
+    
+    arc 23 25 origin (0 0 $zmax)
+    arc 25 27 origin (0 0 $zmax)
+    arc 27 29 origin (0 0 $zmax)
+    arc 29 31 origin (0 0 $zmax)
+    arc 31 33 origin (0 0 $zmax)
+);
+
+boundary
+(
+    cylinder
+    {
+        type wall;
+        faces
+        (
+            (0 2 22 24)
+            (2 4 24 26)
+            (6 8 28 30)
+            (8 10 30 32)
+        );
+    }
+    jet
+    {
+        type patch;
+        faces
+        (
+            (4 6 26 28)
+        );
+    }    
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (19 20 41 42)
+            (20 21 42 43)
+        );
+    }
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (12 13 34 35)
+            (13 14 35 36)
+        );
+    }
+    topAndBottom
+    {
+        type patch;
+        faces
+        (
+            (14 15 36 37)
+            (15 16 37 38)
+            (16 17 38 39)
+            (17 18 39 40)
+            (18 19 40 41)
+        );
+    }
+    symmetry
+    {
+        type symmetryPlane;
+        faces
+        (
+            (0 1 22 23)
+            (1 12 23 34)
+            (10 11 32 33)
+            (11 21 33 43)            
+        );
+    }    
+    frontAndBack
+    {
+        type empty;
+        faces
+        (
+            (0 1 3 2)
+            (2 3 5 4)
+            (4 5 7 6)
+            (6 7 9 8)
+            (8 9 11 10)
+            (1 12 13 3)
+            (3 13 14 15)
+            (3 15 16 5)
+            (5 16 17 7)
+            (7 17 18 9)
+            (9 18 19 20)
+            (11 9 20 21)
+            (22 23 25 24)
+            (24 25 27 26)
+            (26 27 29 28)
+            (28 29 31 30)
+            (30 31 33 32)
+            (23 34 35 25)
+            (25 35 36 37)
+            (25 37 38 27)
+            (27 38 39 29)
+            (29 39 40 31)
+            (31 40 41 42)
+            (33 31 42 43)
+        );
+    }
+);
+
+// ************************************************************************* //
