@@ -67,7 +67,7 @@ Create a new virtual environment and install **Tensorforce** and **mpi4py**. For
 
 
 
-# How to use 
+## How to use 
 The vortex shedding behind a 2D cylinder case study, presented in Section 3.1 of the ([published article](https://link.springer.com/article/10.1007/s11012-024-01830-1)), is presented here in the `training` folder. To run the tutorial case and train a model from scratch, simply enter the `training` folder and run
  ```bash
 mpirun -np 5 python3 training_mpi.py &> log.training
@@ -77,7 +77,7 @@ Here, five parallel CFD environments are run, each of which uses CFD parallel pr
 The 3D cylinder case study, presented in Section 3.2 of the ([published article](https://link.springer.com/article/10.1007/s11012-024-01830-1)) will also be added soon.
 
 
-# How to cite
+## How to cite
 If you use TensorforceFoam, kindly cite the original article of this framework
 ```
 @article{Salehi2024Meccanica,
