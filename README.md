@@ -6,9 +6,7 @@
 The schematic diagram of the framework's workflow is illustrated below. It shows how the training program operates across multiple processors, the role of the master processor in aggregating and updating data, and the communication between processors via MPI. More information about the theory, the developed codes, and the test cases are presented in the published article ([An efficient intrusive deep reinforcement learning framework for OpenFOAM
 ](https://link.springer.com/article/10.1007/s11012-024-01830-1)).
 
-[text](doc/DRL.pdf)
-![domain](./doc/DRL.pdf)
-![alt text](https://github.com/salehisaeed/TensorforceFoam/blob/[branch]/image.jpg?raw=true)
+![Framework](./doc/DRL.png)
 
 The source code for the OpenFOAM implementation of the DRL agent is found in the `OpenFOAM` folder, while the `training` folder contains the Python programs and the verification test cases. The library is tested and verified with the recent versions of [OpenFOAM](https://www.openfoam.com/), such as v2312 and 2406.
 
