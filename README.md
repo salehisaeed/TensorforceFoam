@@ -8,6 +8,13 @@ The schematic diagram of the framework's workflow is illustrated below. It shows
 
 ![Framework](./doc/DRL.png)
 
+
+<object data="./doc/DRL.pdf" type="application/pdf" width="700px" height="700px">
+    <embed src="./doc/DRL.pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="./doc/DRL.pdf">Download PDF</a>.</p>
+    </embed>
+</object>
+
 The source code for the OpenFOAM implementation of the DRL agent is found in the `OpenFOAM` folder, while the `training` folder contains the Python programs and the verification test cases. The library is tested and verified with the recent versions of [OpenFOAM](https://www.openfoam.com/), such as v2312 and 2406.
 
 
