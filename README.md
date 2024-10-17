@@ -27,12 +27,28 @@ The installation has to be done on both OpenFOAM and Python sides.
 
 ### Installation of the OpenFOAM side
 
-The library is developed for the OpenCFD branch of OpenFOAM ([openfoam.com](https://www.openfoam.com/)). Therefore, a complete installation of OpenFOAM (preferably a recent version, such as OpenFOAM-v2312 or OpenFOAM-v2406, is required.).
+The OpenFOAM library of TensorforceFoam uses **Tensorflow C API** and **CppFlow** to load TensorFlow models within OpenFOAM and run neural network computations. Therefore, these two package needs to be installed before compiling thew OpenFOAM library.
 
-Users are referred to [OpenFOAM installation guide](https://develop.openfoam.com/Development/openfoam/-/blob/master/doc/Build.md) for more information on installing OpenFOAM.
+#### Tensorflow C API
+To install **Tensorflow C API**, download and extract the **Linux CPU only** version of TensorFlow for C. The library will be linked to the OpenFOAM compiled library to use the Tensorflow models within C++ codes. The address for the extracted library is required in the `option` file of OpenFOAM library (`OpenFOAM/src/DRLAgent/Make/option`). For convenience, an environment variable can be defined for this address in the `.bashrc` as
+```bash
+export TF_LIBRARIES=/address/to/the/library/libtensorflow-cpu-linux-x86_64-2.8.0
+```
 
 
-After installing OpenFOAMThen, in a terminal where OpenFOAM is sourced, run the `wmake` in the `OpenFOAM/src/DRLAgent` folder:
+#### CppFlow
+The [**CppFlow**](https://github.com/serizba/cppflow) is also used here for loading and running Tensorflow models in C++. Download and install CppFlow from its corresponding GitHub repository. However, CppFlow does not support boolean inputs to the Tensorflow models which is needed in the Tensorforce DRL agents. The boolean specifies whether the model is run in the deterministic (evaluating) or non-deterministic (training) modes. Therefore, Small modifications are implemented to the original CppFlow library to make it compatible with boolean inputs. Only two files are modified which are found in the `cppflow`folder. The rest of the CppFlow files are the same as the original library.
+
+Here again, an environment variable can be defined for the address of the cppflow library in the `.bashrc` for convenience:
+```bash
+export CPPFLOW_LIBRARIES=/address/to/the/library/cppflow
+```
+
+#### OpenFOAM library
+Now, we can compile and use the OpenFOAM library. The library is developed for the OpenCFD branch of OpenFOAM ([openfoam.com](https://www.openfoam.com/)). Therefore, a complete installation of OpenFOAM, preferably a recent version, such as OpenFOAM-v2312 or OpenFOAM-v2406, is required. Users are referred to [OpenFOAM installation guide](https://develop.openfoam.com/Development/openfoam/-/blob/master/doc/Build.md) for more information on installing OpenFOAM.
+
+
+After installing OpenFOAM, one needs to compile the OpenFOAM side of this framework. In a terminal where OpenFOAM is sourced, run the `wmake` in the `OpenFOAM/src/DRLAgent` folder:
 ```bash
 cd OpenFOAM/src/DRLAgent
 wclean && wmake
@@ -44,18 +60,7 @@ $WM_PROJECT_DIR/wmake/rules/General/Gcc/c++
 Inside this file, set `-std=c++17`. If you do not want to alternate the compiler settings globally, the same setting can be done via the `Make/option` file.
 
 
-The **Tensorflow C API** needs to be installed. Download and extract the **Linux CPU only** version of TensorFlow for C. The library linked to the OpenFOAM compiled library to use the Tensorflow models within C++ codes. The address for the extracted library is required in the `option` file (`OpenFOAM/src/DRLAgent/Make/option`). For convenience, an environment variable can be defined for this address in the `.bashrc` as
-```bash
-export TF_LIBRARIES=/address/to/the/library/libtensorflow-cpu-linux-x86_64-2.8.0
-```
 
-
-The [**CppFlow**](https://github.com/serizba/cppflow) is also used here for loading and running Tensorflow models in C++. Download and install CppFlow from its corresponding github repository. However, CppFlow does not support boolean inputs to the Tensorflow models which is needed in the Tensorforce DRL agents. The boolean specifies whether the model is run in the deterministic (evaluating) or non-deterministic (for training) modes. Therefore, Small modifications are implemented to the original CppFlow library to make it compatible with boolean inputs. Only two files are modified which are found in the `cppflow`folder. The rest of the CppFlow files are the same as the original library.
-
-Here again, an environment variable can be defined for the address of the cppflow library in the `.bashrc` for convenience:
-```bash
-export CPPFLOW_LIBRARIES=/address/to/the/library/cppflow
-```
 
 
 
@@ -68,7 +73,7 @@ Create a new virtual environment and install **Tensorforce** and **mpi4py**. For
 
 
 ## How to use 
-The vortex shedding behind a 2D cylinder case study, presented in Section 3.1 of the ([published article](https://link.springer.com/article/10.1007/s11012-024-01830-1)), is presented here in the `training` folder. To run the tutorial case and train a model from scratch, simply enter the `training` folder and run
+The vortex shedding behind a 2D cylinder case study, presented in Section 3.1 of the ([published article](https://link.springer.com/article/10.1007/s11012-024-01830-1)), is presented here in the `tutorials` folder. To run the tutorial case and train a model from scratch, simply enter the `tutorials` folder and run
  ```bash
 mpirun -np 5 python3 training_mpi.py &> log.training
 ```
