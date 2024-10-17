@@ -1,0 +1,18 @@
+{
+  "name": "cylinder",
+  "base_case": "base",
+  "policy_dir": "model",
+  "state_field": "p",
+  "run_cases": "run",
+  "n_states": 315,
+  "n_actions": 400,
+  "action_time_step": 0.25,
+  "action_bound": 1.0,
+  "reward_function": "force",
+  "reward_penalty": 1.18,
+  "reward_coeff": 0.1,
+  "force_average_time": 3.73,  
+  "CFD_time_step": 0.01,
+  "parallel": true,
+  "max_waiting_time": 60
+}

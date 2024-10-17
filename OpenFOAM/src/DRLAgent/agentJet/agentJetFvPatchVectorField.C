@@ -306,7 +306,7 @@ void Foam::agentJetFvPatchVectorField::updateCoeffs()
                     << actionOld_ 
                     << endl;
             }
-            // Broadcast the same action value on all processors
+            // Broadcast the same action value on all processors when parallel processing
             Pstream::broadcast(actionNew_);
             Pstream::broadcast(actionOld_);
         }

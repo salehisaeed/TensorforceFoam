@@ -1,0 +1,77 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2112                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      binary;
+    arch        "LSB;label=32;scalar=64";
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField           uniform (1 0 0);
+
+boundaryField
+{
+    inlet
+    {
+        name    parablicInletVelocity;
+        type    codedFixedValue;
+        code
+        #{
+            const scalar Umax = 1.5;
+            const scalar H = 5;
+
+            const fvPatch& patch(this->patch());
+            vectorField U(patch.size(), vector(0, 0, 0));
+
+            forAll(U, idx)
+            {
+                const scalar y = patch.Cf()[idx][1];
+                U[idx] = vector(Umax*(1-pow(y/(H/2),2)), 0, 0);
+            }
+            operator==(U);
+        #};
+        value   $internalField;
+    }
+
+    cylinder
+    {
+        type            noSlip;
+    }
+
+    jet
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    topAndBottom
+    {
+        type            noSlip;
+    }
+
+    front
+    {
+        type            zeroGradient;
+    }
+
+    back
+    {
+        type            zeroGradient;
+    }    
+}
+// ************************************************************************* //

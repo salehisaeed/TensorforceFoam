@@ -1,0 +1,8 @@
+#!/bin/sh
+
+rm slurm* -rf
+rm results/training/* -rf
+# rm cylinder/run*/ -rf
+rm summaries/ -rf
+rm model*/ -rf
+rm episode-train -rf
