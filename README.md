@@ -73,13 +73,13 @@ Create a new virtual environment and install **Tensorforce** and **mpi4py**. For
 
 
 ## How to use 
-The vortex shedding behind a 2D cylinder case study, presented in Section 3.1 of the ([published article](https://link.springer.com/article/10.1007/s11012-024-01830-1)), is presented here in the `tutorials` folder. To run the tutorial case and train a model from scratch, simply enter the `tutorials` folder and run
+The vortex shedding behind a 2D cylinder case study, presented in Section 3.1 of the ([published article](https://link.springer.com/article/10.1007/s11012-024-01830-1)), is found in the `tutorials/cylinder2D` folder. To run the tutorial case and train a model from scratch, simply enter the `tutorials/cylinder2D` folder and run
  ```bash
 mpirun -np 5 python3 training_mpi.py &> log.training
 ```
 Here, five parallel CFD environments are run, each of which uses CFD parallel processing. The number of cores for each parallel CFD is specified inside `system/decomposeParDict` file.
 
-The 3D cylinder case study, presented in Section 3.2 of the ([published article](https://link.springer.com/article/10.1007/s11012-024-01830-1)) will also be added soon.
+The vortex shedding behind a 3D confined cylinder case study, presented in Section 3.2 of the ([published article](https://link.springer.com/article/10.1007/s11012-024-01830-1)), is also found in the `tutorials/cylinder3D` folder. One can run the tutorial case and train a model from scratch using the same command as above.
 
 
 ## How to cite
