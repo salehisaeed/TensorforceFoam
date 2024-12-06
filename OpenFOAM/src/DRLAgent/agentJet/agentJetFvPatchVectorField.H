@@ -26,37 +26,6 @@ License
 Class
     Foam::agentJetFvPatchVectorField
 
-Group
-    grpWallBoundaryConditions grpGenericBoundaryConditions
-
-Description
-    This boundary condition provides a rotational velocity condition.
-
-Usage
-    \table
-        Property     | Description             | Required    | Default value
-        origin       | origin of rotation in Cartesian coordinates | yes|
-        axis         | axis of rotation        | yes         |
-    \endtable
-
-    Example of the boundary condition specification:
-    \verbatim
-    <patchName>
-    {
-        type            agentJet;
-        origin          (0 0 0);
-        axis            (0 0 1);
-        policy          "policy.pt"
-        startTime       0.01;
-        interval        30;
-        train           true;
-        absOmegaMax     0.05;
-        logStdMax       2.0;
-    }
-    \endverbatim
-
-    The \c omega entry is a Function1 of time, see Foam::Function1Types.
-
 See also
     Foam::fixedValueFvPatchField
     Foam::Function1Types
